@@ -1,8 +1,7 @@
 /* JS-code inspired by "Freshman-tech" calc-tutorial, functions for % and +/- added. */
 
-
 const calculator = {
-  displayValue: '0',
+  displayValue: "0",
   firstOperand: null,
   waitingForSecondOperand: false,
   operator: null,
@@ -15,24 +14,21 @@ function inputDigit(digit) {
   if (waitingForSecondOperand === true) {
     calculator.displayValue = digit;
     calculator.waitingForSecondOperand = false;
-  } 
-
-  else if(calculator.displayValue == ("-0")) {
+  } else if (calculator.displayValue == "-0") {
     calculator.displayValue = "-" + digit;
-  }
-  
-  else {
-    calculator.displayValue = displayValue === '0' ? digit : displayValue + digit;
+  } else {
+    calculator.displayValue =
+      displayValue === "0" ? digit : displayValue + digit;
   }
 
   console.log(calculator);
 }
 
 function inputDecimal(dot) {
-  if (calculator.waitingForSecondOperand === true) { 
-      calculator.displayValue = "0."
-      calculator.waitingForSecondOperand = false;
-    return; 
+  if (calculator.waitingForSecondOperand === true) {
+    calculator.displayValue = "0.";
+    calculator.waitingForSecondOperand = false;
+    return;
   }
   if (!calculator.displayValue.includes(dot)) {
     calculator.displayValue += dot;
@@ -40,28 +36,26 @@ function inputDecimal(dot) {
 }
 
 function handleOperator(nextOperator) {
-  const { firstOperand, displayValue, operator } = calculator
+  const { firstOperand, displayValue, operator } = calculator;
   const inputValue = parseFloat(displayValue);
   const isNegative = calculator.isNegative;
 
   //kollar om det redan finns en operator och i så fall skrivs den över.
-  // ingen beräkning utförs. 
-  if (operator && calculator.waitingForSecondOperand)  {
+  // ingen beräkning utförs.
+  if (operator && calculator.waitingForSecondOperand) {
     calculator.operator = nextOperator;
     return;
-  } 
+  }
 
   //kollar om operand 1 är tom och att inputValue inte är ett Nan-värde(ex. komma)).
-  if (firstOperand == null && !isNaN(inputValue)) {
+  if (firstOperand === null && !isNaN(inputValue)) {
     //uppdaterar operand 1 med värdet.
     calculator.firstOperand = inputValue;
-  } 
-
-  else if (firstOperand == "-" + "0") {
+  } else if (firstOperand === "-" + "0") {
     calculator.firstOperand = "-" + inputValue;
   }
 
-  //om operand 1 har ett värde utförs beräkning av resultat. 
+  //om operand 1 har ett värde utförs beräkning av resultat.
   else if (operator) {
     const result = calculate(firstOperand, inputValue, operator);
     calculator.displayValue = `${parseFloat(result.toFixed(7))}`;
@@ -75,20 +69,19 @@ function handleOperator(nextOperator) {
 }
 
 function calculate(firstOperand, secondOperand, operator) {
-
-  if (operator === '+') {
+  if (operator === "+") {
     return firstOperand + secondOperand;
-  } else if (operator === '-') {
+  } else if (operator === "-") {
     return firstOperand - secondOperand;
-  } else if (operator === '*') {
+  } else if (operator === "*") {
     return firstOperand * secondOperand;
-  } else if (operator === '/') {
+  } else if (operator === "/") {
     return firstOperand / secondOperand;
   }
 }
 
 function resetCalculator() {
-  calculator.displayValue = '0';
+  calculator.displayValue = "0";
   calculator.firstOperand = null;
   calculator.waitingForSecondOperand = false;
   calculator.operator = null;
@@ -96,50 +89,49 @@ function resetCalculator() {
 }
 
 function updateDisplay() {
-  const display = document.querySelector('.screen');
+  const display = document.querySelector(".screen");
   display.value = calculator.displayValue;
 }
 
 updateDisplay();
 
-const keys = document.querySelector('.keys');
+const keys = document.querySelector(".keys");
 
-keys.addEventListener('click', event => {
+keys.addEventListener("click", (event) => {
   const { target } = event;
   const { value } = target;
 
-  if (!target.matches('button')) {
+  if (!target.matches("button")) {
     return;
   }
 
   switch (value) {
-    case '+':
-    case '-':
-    case '*':
-    case '/':
-    case '=':
+    case "+":
+    case "-":
+    case "*":
+    case "/":
+    case "=":
       handleOperator(value);
       break;
 
-    case '.':
+    case ".":
       inputDecimal(value);
       break;
 
-    case 'allclear':
+    case "allclear":
       resetCalculator();
       break;
 
-    case '%':
+    case "%":
       calculator.displayValue = calculator.displayValue * 0.01;
       break;
 
-    case '+/-':
+    case "+/-":
       //om negativt - gör positivt
       if (calculator.displayValue.charAt(0) == "-") {
         calculator.displayValue = calculator.displayValue.substring(1);
         calculator.isNegative = false;
-      }
-      else {
+      } else {
         calculator.displayValue = "-" + calculator.displayValue;
         calculator.isNegative = true;
       }
@@ -153,4 +145,3 @@ keys.addEventListener('click', event => {
 
   updateDisplay();
 });
-
